@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
       imports: [ConfigModule, UserModule, AuthModule], // Ensure ConfigModule is imported
       inject: [ConfigService], // Inject ConfigService to access .env variables
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres', // Change to 'postgres', 'sqlite', etc. if needed
+        type: 'postgres',
         host: configService.get<string>('DATABASE_HOST'),
         port: configService.get<number>('DATABASE_PORT'),
         username: configService.get<string>('DATABASE_USER'),
