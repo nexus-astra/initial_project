@@ -1,7 +1,7 @@
 import { Injectable, HttpException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './user.schema';
+import { CreateUserDto, updateUserDto } from './user.schema';
 import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,7 +47,9 @@ export class UserService {
     data: Users[];
     message: string;
   }> {
-    const data = await this.userRepository.find();
+    const data = await this.userRepository.find({
+      where: { role: Not('admin') },
+    });
     return {
       success: true,
       data,
@@ -73,7 +75,7 @@ export class UserService {
 
   async update(
     id: string,
-    updateUserDto: CreateUserDto,
+    updateUserDto: updateUserDto,
   ): Promise<{
     success: boolean;
     message: string;

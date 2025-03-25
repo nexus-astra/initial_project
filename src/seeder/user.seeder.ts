@@ -22,18 +22,7 @@ export class UserSeeder implements Seeder {
       throw new Error('Password hashing failed'); // Ensure proper error handling
     }
 
-    const user = [
-      {
-        id: uuidv4(),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        age: faker.number.int({ min: 18, max: 60 }),
-        dob: '1990-01-01',
-        email: 'admin@gmail.com',
-        password: hashedPassword,
-        role: 'admin',
-      },
-    ];
+    const user = [];
     for (let i = 0; i < 5; i++) {
       user.push({
         id: uuidv4(),
@@ -43,7 +32,7 @@ export class UserSeeder implements Seeder {
         dob: '1990-01-01',
         email: faker.internet.email(),
         password: hashedPassword,
-        role: 'user',
+        role: i % 2 === 0 ? 'admin' : 'user',
       });
 
       await userRepository.save(user);

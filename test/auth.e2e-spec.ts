@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from 'src/app.module';
+import { AppModule } from '../src/app.module';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -26,7 +26,7 @@ describe('AuthController (e2e)', () => {
     };
     const APPLICATION_JSON = 'application/json';
     const response = await request(app.getHttpServer())
-      .post('/api/v1/auth/signin')
+      .post('/auth/signin')
       .send(user)
       .set('Accept', APPLICATION_JSON);
     const { data, success } = response.body as {
@@ -35,6 +35,6 @@ describe('AuthController (e2e)', () => {
     };
     expect(success === true).toBe(true);
     expect(typeof data === 'object').toBe(true);
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(201);
   });
 });

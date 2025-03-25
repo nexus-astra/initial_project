@@ -71,8 +71,9 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<{
+    success: boolean;
     access_token: string;
-    userData: {
+    data: {
       userId: string;
       firstName: string;
       lastName: string;
@@ -92,11 +93,12 @@ export class AuthService {
         email: user.email,
       };
       return {
+        success: true,
         access_token: this.jwtService.sign({
           username: user.email,
           sub: user.id,
         }),
-        userData: payload,
+        data: payload,
       };
     }
     // customize error response

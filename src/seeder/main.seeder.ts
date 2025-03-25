@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { UserSeeder } from './user.seeder';
 
@@ -7,11 +8,11 @@ export interface Seeder {
 
 const dataSource = new DataSource({
   type: 'postgres', // Change if using MySQL
-  host: 'localhost',
-  port: 8081,
-  username: 'postgres',
-  password: 'admin',
-  database: 'initial_db',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: Number(process.env.DATABASE_PORT),
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true, // Only for development
 });
