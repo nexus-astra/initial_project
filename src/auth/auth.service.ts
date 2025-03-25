@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { error } from 'console';
-import { CreateUserDto, UserSchema } from '../user/user.schema';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,11 +13,6 @@ export class AuthService {
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
-    // checking if all data is present in the payload
-    const result = UserSchema.safeParse(createUserDto);
-    if (!result.success) {
-      throw new BadRequestException(result.error.errors);
-    }
     const { email } = createUserDto;
     // Check if user exists
     const existingUser = await this.userService.findByEmail(email);

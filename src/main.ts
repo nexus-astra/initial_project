@@ -18,6 +18,13 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
+  // ✅ Manually set API order
+  document.tags = [
+    { name: 'Auth', description: 'Authentication APIs' }, // 👈 This appears first
+    { name: 'Users', description: 'Users APIs' },
+  ];
+
   if (process.env.NODE_ENV !== 'production') {
     SwaggerModule.setup('api', app, document); // Swagger UI at /api
   }

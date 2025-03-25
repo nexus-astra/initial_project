@@ -1,7 +1,8 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { Repository, Not } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, updateUserDto } from './user.schema';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -75,7 +76,7 @@ export class UserService {
 
   async update(
     id: string,
-    updateUserDto: updateUserDto,
+    updateUserDto: UpdateUserDto,
   ): Promise<{
     success: boolean;
     message: string;
