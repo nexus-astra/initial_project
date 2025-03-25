@@ -4,6 +4,7 @@ import { Users } from '../user/user.entity';
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 import { Seeder } from './main.seeder';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserSeeder implements Seeder {
@@ -21,15 +22,28 @@ export class UserSeeder implements Seeder {
       throw new Error('Password hashing failed'); // Ensure proper error handling
     }
 
-    const user = [];
+    const user = [
+      {
+        id: uuidv4(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        age: faker.number.int({ min: 18, max: 60 }),
+        dob: '1990-01-01',
+        email: 'admin@gmail.com',
+        password: hashedPassword,
+        role: 'admin',
+      },
+    ];
     for (let i = 0; i < 5; i++) {
       user.push({
+        id: uuidv4(),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         age: faker.number.int({ min: 18, max: 60 }),
         dob: '1990-01-01',
         email: faker.internet.email(),
         password: hashedPassword,
+        role: 'user',
       });
 
       await userRepository.save(user);

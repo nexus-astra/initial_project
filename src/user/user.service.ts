@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './user.schema';
 import { Users } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,7 @@ export class UserService {
 
     // Create user instance
     const newUser = this.userRepository.create({
+      id: uuidv4(),
       firstName,
       lastName,
       age,

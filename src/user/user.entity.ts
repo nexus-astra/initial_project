@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -22,6 +22,9 @@ export class Users {
 
   @Column()
   password: string;
+
+  @Column()
+  role: string;
 
   @Column({ default: true })
   isActive: boolean;
