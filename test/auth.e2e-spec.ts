@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../app.module';
+import { AppModule } from '../src/app.module';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -21,7 +21,7 @@ describe('AuthController (e2e)', () => {
 
   it('Signin (POST)', async () => {
     const user = {
-      email: 'admin@gmail.com',
+      email: 'admin@example.com',
       password: 'P@ssw0rd',
     };
     const APPLICATION_JSON = 'application/json';

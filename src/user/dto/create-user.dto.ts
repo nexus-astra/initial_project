@@ -8,6 +8,7 @@ import {
   IsNumber,
   ValidateIf,
 } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'John', description: 'First name of the user' })
@@ -49,6 +50,7 @@ export class CreateUserDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Exclude()
   @IsNotEmpty({ message: 'Password is required' })
   @MinLength(6, { message: 'Password must be at least 6 characters' })
   password: string;
@@ -67,4 +69,8 @@ export class CreateUserDto {
 
   @IsBoolean()
   isActive: boolean;
+
+  @ApiProperty({ example: 'user', description: 'Role of the user' })
+  @IsString()
+  role: 'user' | 'admin' | 'superadmin';
 }

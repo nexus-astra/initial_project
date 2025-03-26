@@ -1,5 +1,5 @@
 import { Injectable, HttpException } from '@nestjs/common';
-import { Repository, Not } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,7 +15,8 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<Users> {
-    const { firstName, lastName, age, dob, email, password } = createUserDto;
+    const { firstName, lastName, age, dob, email, password, role, isActive } =
+      createUserDto;
     // Hash password
 
     let hashedPassword = '';
@@ -30,26 +31,29 @@ export class UserService {
 
     // Create user instance
     const newUser = this.userRepository.create({
-      id: uuidv4(),
+      uuid: uuidv4(),
       firstName,
       lastName,
       age,
       dob,
       email,
       password: hashedPassword,
+      role: role ? role : 'user',
+      isActive: isActive ? isActive : true,
     });
 
     // Save to database
     return this.userRepository.save(newUser);
   }
 
-  async findAll(): Promise<{
+  async findAllUser(): Promise<{
     success: boolean;
     data: Users[];
     message: string;
   }> {
+    // console.log(this.userRepository);
     const data = await this.userRepository.find({
-      where: { role: Not('admin') },
+      where: { role: 'user' },
     });
     return {
       success: true,
@@ -58,12 +62,12 @@ export class UserService {
     };
   }
 
-  async findOne(id: string): Promise<{
+  async findOneUser(uuid: string): Promise<{
     success: boolean;
     data: Users;
     message: string;
   }> {
-    const userData = await this.userRepository.findOneBy({ id });
+    const userData = await this.userRepository.findOne({ where: { uuid } });
     if (!userData) {
       throw new HttpException('User Not Found', 404);
     }
@@ -74,14 +78,15 @@ export class UserService {
     };
   }
 
-  async update(
+  async updateUser(
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<{
     success: boolean;
+    data: Users;
     message: string;
   }> {
-    const existingUser = await this.findOne(id);
+    const existingUser = await this.findOneUser(id);
     const userData = this.userRepository.merge(
       existingUser.data,
       updateUserDto,
@@ -89,15 +94,16 @@ export class UserService {
     await this.userRepository.save(userData);
     return {
       success: true,
+      data: userData,
       message: 'Data updated successfully',
     };
   }
 
-  async remove(id: string): Promise<{
+  async removeUser(id: string): Promise<{
     success: boolean;
     message: string;
   }> {
-    const existingUser = await this.findOne(id);
+    const existingUser = await this.findOneUser(id);
     await this.userRepository.remove(existingUser.data);
     return {
       success: true,

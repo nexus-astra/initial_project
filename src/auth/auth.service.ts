@@ -40,7 +40,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<{
-    id: string;
+    uuid: string;
     firstName: string;
     lastName: string;
     age: number;
@@ -75,7 +75,7 @@ export class AuthService {
     const user = await this.validateUser(email, password);
     if (user) {
       const payload = {
-        userId: user.id,
+        userId: user.uuid,
         firstName: user.firstName,
         lastName: user.lastName,
         age: user.age,
@@ -86,7 +86,7 @@ export class AuthService {
         success: true,
         access_token: this.jwtService.sign({
           username: user.email,
-          sub: user.id,
+          sub: user.uuid,
         }),
         data: payload,
       };

@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsBoolean,
-  IsNumber,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 export class UpdateUserDto {
   @ApiProperty({ example: 'John', description: 'First name of the user' })
@@ -39,7 +33,4 @@ export class UpdateUserDto {
   @IsEmail({}, { message: 'Invalid email format' })
   @IsString()
   email: string;
-
-  @IsBoolean()
-  isActive: boolean;
 }

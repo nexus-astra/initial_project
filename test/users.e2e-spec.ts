@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../app.module';
+import { AppModule } from '../src/app.module';
 
 describe('UsersController (e2e)', () => {
   interface User {
-    id: string;
+    uuid: string;
   }
   let app: INestApplication;
   let userToken = '';
   let userData: User = {
-    id: '',
+    uuid: '',
   };
 
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('UsersController (e2e)', () => {
     await app.init();
 
     const user = {
-      email: 'admin@gmail.com',
+      email: 'admin@example.com',
       password: 'P@ssw0rd',
     };
     const APPLICATION_JSON = 'application/json';
@@ -56,7 +56,7 @@ describe('UsersController (e2e)', () => {
 
   it('should return one user', async () => {
     const response = await request(app.getHttpServer())
-      .get(`/users/${userData.id}`)
+      .get(`/users/${userData.uuid}`)
       .set('Authorization', `Bearer ${userToken}`);
     const { data, success } = response.body as {
       data: User;
@@ -74,7 +74,7 @@ describe('UsersController (e2e)', () => {
       lastName: 'Doe',
     };
     const response = await request(app.getHttpServer())
-      .patch(`/users/${userData.id}`)
+      .patch(`/users/${userData.uuid}`)
       .send(payload)
       .set('Authorization', `Bearer ${userToken}`);
     const { success } = response.body as {
@@ -86,7 +86,7 @@ describe('UsersController (e2e)', () => {
 
   it('should delete a user', async () => {
     const response = await request(app.getHttpServer())
-      .delete(`/users/${userData.id}`)
+      .delete(`/users/${userData.uuid}`)
       .set('Authorization', `Bearer ${userToken}`);
     const { success } = response.body as {
       success: boolean;

@@ -26,8 +26,8 @@ import { Users } from './user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
@@ -35,17 +35,17 @@ export class UserController {
     type: [Users],
   })
   async findAll() {
-    return await this.userService.findAll();
+    return await this.userService.findAllUser();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get one user by ID' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' }) // Describe parameter
   @ApiResponse({ status: 200, description: 'User found', type: Users })
   @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id') id: string) {
-    return await this.userService.findOne(id);
+    return await this.userService.findOneUser(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -57,7 +57,7 @@ export class UserController {
     description: 'Returns user updated data',
   })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.userService.update(id, updateUserDto);
+    return await this.userService.updateUser(id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -65,6 +65,6 @@ export class UserController {
   @ApiOperation({ summary: 'Delete one user by ID' })
   @ApiResponse({ status: 200, description: 'Returns success message' })
   async remove(@Param('id') id: string) {
-    return await this.userService.remove(id);
+    return await this.userService.removeUser(id);
   }
 }

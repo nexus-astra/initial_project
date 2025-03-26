@@ -26,7 +26,7 @@ async function bootstrap() {
   ];
 
   if (process.env.NODE_ENV !== 'production') {
-    SwaggerModule.setup('api', app, document); // Swagger UI at /api
+    SwaggerModule.setup('api/docs', app, document); // Swagger UI at /api
   }
 
   await app.listen(Number(process.env.PORT));
