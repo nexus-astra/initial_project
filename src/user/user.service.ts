@@ -1,4 +1,4 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -62,20 +62,28 @@ export class UserService {
     };
   }
 
-  async findOneUser(uuid: string): Promise<{
+  async findOneUser(id: string): Promise<{
     success: boolean;
     data: Users;
     message: string;
   }> {
-    const userData = await this.userRepository.findOne({ where: { uuid } });
-    if (!userData) {
-      throw new HttpException('User Not Found', 404);
+    try {
+      const userData = await this.userRepository.findOne({
+        where: { uuid: id },
+      });
+      if (!userData) {
+        throw new NotFoundException('User not found');
+      }
+      return {
+        success: true,
+        data: userData,
+        message: 'Data fetched successfully',
+      };
+    } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log(error?.stack);
+      throw new NotFoundException('User not found');
     }
-    return {
-      success: true,
-      data: userData,
-      message: 'Data fetched successfully',
-    };
   }
 
   async updateUser(
@@ -86,29 +94,48 @@ export class UserService {
     data: Users;
     message: string;
   }> {
-    const existingUser = await this.findOneUser(id);
-    const userData = this.userRepository.merge(
-      existingUser.data,
-      updateUserDto,
-    );
-    await this.userRepository.save(userData);
-    return {
-      success: true,
-      data: userData,
-      message: 'Data updated successfully',
-    };
+    try {
+      const userData = await this.userRepository.findOne({
+        where: { uuid: id },
+      });
+      if (!userData) {
+        throw new NotFoundException('User not found');
+      }
+
+      Object.assign(userData, updateUserDto);
+      await this.userRepository.save(userData);
+      return {
+        success: true,
+        data: userData,
+        message: 'Data updated successfully',
+      };
+    } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log(error?.stack);
+    }
   }
 
   async removeUser(id: string): Promise<{
     success: boolean;
     message: string;
   }> {
-    const existingUser = await this.findOneUser(id);
-    await this.userRepository.remove(existingUser.data);
-    return {
-      success: true,
-      message: 'Data deleted successfully',
-    };
+    try {
+      const userData = await this.userRepository.findOne({
+        where: { uuid: id },
+      });
+      if (!userData) {
+        throw new NotFoundException('User not found');
+      }
+      await this.userRepository.remove(userData);
+      return {
+        success: true,
+        message: 'Data deleted successfully',
+      };
+    } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log(error?.stack);
+      throw new NotFoundException('User not found');
+    }
   }
 
   async findByEmail(email: string): Promise<Users | null> {
